@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf63577a7c6c5b9498931390d06915ef, type: 3}
+  m_Name: ChatScript_Phone
+  m_EditorClassIdentifier: Assembly-CSharp::ChatScript
+  lines:
+  - side: 1
+    text: "\uD558\uC719"
+  - side: 0
+    text: "\uC6C5 \uC548\uB155"
+  - side: 1
+    text: "\uBB50\uD574?"
+  - side: 0
+    text: "\uB864\uD558\uB294\uC911"
