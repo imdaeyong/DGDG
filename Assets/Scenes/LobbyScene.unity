@@ -148,6 +148,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 005cf68e5f0417c44a0c5b20b81216f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneLoader
+  csvUrl: 
+  chatScript: {fileID: 0}
+  chatListPresenter: {fileID: 0}
+  clearExistingBeforeApply: 1
+  refreshOnStart: 1
+  scrollToBottomAfterRender: 1
 --- !u!4 &105891818
 Transform:
   m_ObjectHideFlags: 0
@@ -246,9 +252,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 105891817}
-        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: LoadPhoneScene
+      - m_Target: {fileID: 508841964}
+        m_TargetAssemblyTypeName: LobbySceneLoader, Assembly-CSharp
+        m_MethodName: GoToRoomScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -498,6 +504,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 447318366}
   m_CullTransparentMesh: 1
+--- !u!1 &508841963
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 508841965}
+  - component: {fileID: 508841964}
+  m_Layer: 0
+  m_Name: SceneController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &508841964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508841963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9441f0f98317a624381d4f9e58de505e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LobbySceneLoader
+  nextSceneName: RoomScene
+--- !u!4 &508841965
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508841963}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1078.76, y: 1074.968, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &514650308
 GameObject:
   m_ObjectHideFlags: 0
@@ -636,8 +687,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 84328610edf90294c8a6fcd66f088acd, type: 2}
+  m_sharedMaterial: {fileID: -7828611847622682823, guid: 84328610edf90294c8a6fcd66f088acd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1223,8 +1274,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Button
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 84328610edf90294c8a6fcd66f088acd, type: 2}
+  m_sharedMaterial: {fileID: -7828611847622682823, guid: 84328610edf90294c8a6fcd66f088acd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1310,3 +1361,4 @@ SceneRoots:
   - {fileID: 1563311272}
   - {fileID: 514650311}
   - {fileID: 105891818}
+  - {fileID: 508841965}
