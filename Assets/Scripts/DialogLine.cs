@@ -9,6 +9,8 @@ public class DialogLine
     public string ordering;
     public string text;
     public string memo;
+    public string typeSound;
+    public string effectSound;
 
     public DialogLine(
         int dialogId,
@@ -18,7 +20,9 @@ public class DialogLine
         string speakerName,
         string dialogOrdering,
         string lineText,
-        string dialogMemo)
+        string dialogMemo,
+        string dialogTypeSound,
+        string dialogEffectSound)
     {
         id = dialogId;
         groupId = dialogGroupId;
@@ -28,5 +32,7 @@ public class DialogLine
         ordering = dialogOrdering;
         text = lineText;
         memo = dialogMemo;
+        typeSound = dialogTypeSound;
+        effectSound = dialogEffectSound;
     }
 }

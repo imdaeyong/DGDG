@@ -89,7 +89,7 @@ public class GoogleSheetCsvDialogLoader : MonoBehaviour
 
             string[] cols = SplitCsvRow(row);
 
-            if (cols.Length < 8)
+            if (cols.Length < 10)
             {
                 continue;
             }
@@ -113,6 +113,8 @@ public class GoogleSheetCsvDialogLoader : MonoBehaviour
             string ordering = CleanCell(cols[5]);
             string text = CleanCell(cols[6]);
             string memo = CleanCell(cols[7]);
+            string typeSound = CleanCell(cols[8]);
+            string effectSound = CleanCell(cols[9]);
 
             if (unused == "1")
             {
@@ -133,7 +135,9 @@ public class GoogleSheetCsvDialogLoader : MonoBehaviour
                     speaker,
                     ordering,
                     text,
-                    memo
+                    memo,
+                    typeSound,
+                    effectSound
                 )
             );
         }

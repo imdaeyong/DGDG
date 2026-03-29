@@ -6,6 +6,17 @@ using UnityEngine.UI;
 
 public class DialogManager : MonoBehaviour
 {
+
+    [Header("Sound")]
+    public AudioSource bgmAudioSource;
+    public AudioSource sfxAudioSource;
+    public AudioSource typingAudioSource;
+
+    public AudioClip roomBgmClip;
+
+    public List<DialogSoundData> typingSoundList = new List<DialogSoundData>();
+    public List<DialogSoundData> effectSoundList = new List<DialogSoundData>();
+
     [Header("UI")]
     public TMP_Text nameText;
     public TMP_Text dialogText;
@@ -81,8 +92,103 @@ public class DialogManager : MonoBehaviour
         {
             currentStoryGroupId = debugStartGroupId;
         }
+        PlayRoomBgm();
     }
 
+
+    // RoomScene 배경음 재생
+    void PlayRoomBgm()
+    {
+        if (bgmAudioSource == null)
+        {
+            return;
+        }
+
+        if (roomBgmClip == null)
+        {
+            return;
+        }
+
+        if (bgmAudioSource.clip != roomBgmClip)
+        {
+            bgmAudioSource.clip = roomBgmClip;
+        }
+
+        bgmAudioSource.loop = true;
+
+        if (!bgmAudioSource.isPlaying)
+        {
+            bgmAudioSource.Play();
+        }
+    }
+    // 타이핑 키보드 소리 시작
+    // TypeSound 키에 맞는 타이핑 사운드 시작
+    void StartTypingSound(string typeSoundKey)
+    {
+        Debug.Log("StartTypingSound 호출, key = [" + typeSoundKey + "]");
+
+        if (typingAudioSource == null)
+        {
+            Debug.LogWarning("typingAudioSource 가 null");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(typeSoundKey))
+        {
+            Debug.LogWarning("typeSoundKey 가 비어 있음");
+            return;
+        }
+
+
+        int i;
+        for (i = 0; i < typingSoundList.Count; i++)
+        {
+            if (typingSoundList[i] != null)
+            {
+                Debug.Log("비교 대상 key = [" + typingSoundList[i].soundKey + "]");
+            }
+
+            if (typingSoundList[i] != null &&
+                typingSoundList[i].soundKey == typeSoundKey)
+            {
+                if (typingSoundList[i].clip != null)
+                {
+                    if (typingAudioSource.clip != typingSoundList[i].clip)
+                    {
+                        typingAudioSource.clip = typingSoundList[i].clip;
+                    }
+
+                    typingAudioSource.loop = true;
+                    typingAudioSource.volume = 1f;
+                    typingAudioSource.Play();
+
+                    Debug.Log("타이핑 사운드 재생 성공: " + typingAudioSource.clip.name);
+                }
+                else
+                {
+                    Debug.LogWarning("매칭은 됐는데 clip 이 null");
+                }
+                return;
+            }
+        }
+
+        Debug.LogWarning("TypeSound 매칭 실패: [" + typeSoundKey + "]");
+    }
+
+
+    // 타이핑 키보드 소리 정지
+    void StopTypingSound()
+    {
+        if (typingAudioSource == null)
+        {
+            return;
+        }
+
+        if (typingAudioSource.isPlaying)
+        {
+            typingAudioSource.Stop();
+        }
+    }
 
     // 전체 데이터 설정 후 현재 스토리 그룹 또는 디버그 그룹으로 대화를 시작
     public void StartDialog(
@@ -169,6 +275,7 @@ public class DialogManager : MonoBehaviour
 
 
     // 현재 줄 표시
+    // 현재 줄 표시
     void ShowCurrentLine()
     {
         if (currentIndex < 0 || currentIndex >= currentGroupLines.Count)
@@ -176,6 +283,8 @@ public class DialogManager : MonoBehaviour
             EndDialog();
             return;
         }
+
+        StopTypingSound();
 
         if (nextMark != null)
         {
@@ -205,17 +314,19 @@ public class DialogManager : MonoBehaviour
             }
         }
 
+        StopTypingSound();
+        PlayEffectSound(line.effectSound);
+
         if (typingCoroutine != null)
         {
             StopCoroutine(typingCoroutine);
         }
 
-        typingCoroutine = StartCoroutine(TypeText(line.text));
+        typingCoroutine = StartCoroutine(TypeText(line.text, line.typeSound));
     }
 
-
     // 타이핑 출력
-    IEnumerator TypeText(string fullText)
+    IEnumerator TypeText(string fullText, string typeSoundKey)
     {
         isTyping = true;
 
@@ -223,6 +334,8 @@ public class DialogManager : MonoBehaviour
         {
             dialogText.text = "";
         }
+
+        StartTypingSound(typeSoundKey);
 
         int i;
         for (i = 0; i < fullText.Length; i++)
@@ -235,6 +348,7 @@ public class DialogManager : MonoBehaviour
             yield return new WaitForSeconds(typingSpeed);
         }
 
+        StopTypingSound();
         isTyping = false;
 
         if (currentIndex < 0 || currentIndex >= currentGroupLines.Count)
@@ -320,12 +434,15 @@ public class DialogManager : MonoBehaviour
 
 
     // 타이핑 즉시 완료
+    // 타이핑 즉시 완료
     void CompleteTyping()
     {
         if (typingCoroutine != null)
         {
             StopCoroutine(typingCoroutine);
         }
+
+        StopTypingSound();
 
         if (currentIndex < 0 || currentIndex >= currentGroupLines.Count)
         {
@@ -364,7 +481,6 @@ public class DialogManager : MonoBehaviour
             }
         }
     }
-
 
     // 현재 Dialog ID에 연결된 선택지가 있는지 확인
     bool HasChoices(int dialogId)
@@ -675,9 +791,12 @@ public class DialogManager : MonoBehaviour
 
 
     // 대화 종료 처리, 다음 스토리 GroupID를 10 증가시키고 대화창 숨김
+    // 대화 종료 처리, 다음 스토리 GroupID를 10 증가시키고 대화창 숨김
     void EndDialog()
     {
         isDialogEnded = true;
+
+        StopTypingSound();
 
         if (nextMark != null)
         {
@@ -698,4 +817,42 @@ public class DialogManager : MonoBehaviour
 
         Debug.Log("대화 종료. 다음 GroupID = " + currentStoryGroupId);
     }
+    // 현재 대사의 SoundKey에 맞는 효과음 재생
+    // EffectSound 키에 맞는 효과음 1회 재생
+    void PlayEffectSound(string effectSoundKey)
+    {
+        if (string.IsNullOrEmpty(effectSoundKey))
+        {
+            return;
+        }
+
+        if (sfxAudioSource == null)
+        {
+            return;
+        }
+
+        int i;
+        for (i = 0; i < effectSoundList.Count; i++)
+        {
+            if (effectSoundList[i] != null &&
+                effectSoundList[i].soundKey == effectSoundKey)
+            {
+                if (effectSoundList[i].clip != null)
+                {
+                    sfxAudioSource.PlayOneShot(effectSoundList[i].clip);
+                }
+                return;
+            }
+        }
+
+        Debug.LogWarning("EffectSound에 해당하는 AudioClip을 찾지 못했습니다. effectSoundKey=" + effectSoundKey);
+    }
+}
+
+
+[System.Serializable]
+public class DialogSoundData
+{
+    public string soundKey;
+    public AudioClip clip;
 }
